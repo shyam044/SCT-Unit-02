@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SCT Unit-02</title>
+      <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        /* Header styling */
+        header {
+            background-color: #0077cc;
+            color: white;
+            padding: 1rem 0.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            page-break-after: always;
+        }
+
+        /* Headings */
+        h2 {
+            color: #0077cc;
+            margin: 2rem 0 1rem;
+            font-size: 1.6rem;
+        }
+
+        h3 {
+            color: #444;
+            margin-top: 0.8rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* Paragraphs */
+        p {
+            margin: 0.5rem 0;
+        }
+
+        /* Lists */
+        ul {
+            margin: 0.3rem 0 1rem 1rem;
+            padding-left: 1rem;
+        }
+
+        li>ul {
+            margin-top: 0.3rem;
+            margin-bottom: 0.6rem;
+            padding-left: 0.7rem;
+        }
+
+        li>ul>li {
+            margin-bottom: 0.4rem;
+        }
+
+            ol {
+            margin: 0.3rem 0 1rem 1rem;
+            padding-left: 1rem;
+        }
+
+        li>ol {
+            margin-top: 0.3rem;
+            margin-bottom: 0.6rem;
+            padding-left: 0.7rem;
+        }
+
+        li>ol>li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* Images */
+        img {
+            display: block;
+            max-width: 80%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 6px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            body {
+                font-size: 0.95rem;
+            }
+
+            header {
+                font-size: 1.3rem;
+                padding: 0.8rem 0.5rem;
+            }
+
+            .container {
+                padding: 0.9rem;
+                margin: 1.5rem auto;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+                margin-top: 1.8rem;
+            }
+
+            h3 {
+                font-size: 1.1rem;
+                margin-top: 0.7rem;
+            }
+
+            ul {
+                margin-left: 0.5rem;
+                padding-left: 0.7rem;
+            }
+
+            li>ul {
+                margin-top: 0.2rem;
+                margin-bottom: 0.4rem;
+                padding-left: 0.5rem;
+            }
+
+            li>ul>li {
+                margin-bottom: 0.3rem;
+            }
+
+
+            ul li {
+                font-size: 0.95rem;
+                line-height: 1.3rem;
+            }
+
+            ol {
+                margin-left: 0.5rem;
+                padding-left: 0.7rem;
+            }
+
+            li>ol {
+                margin-top: 0.2rem;
+                margin-bottom: 0.4rem;
+                padding-left: 0.5rem;
+            }
+
+            li>ol>li {
+                margin-bottom: 0.3rem;
+            }
+
+
+            ol li {
+                font-size: 0.95rem;
+                line-height: 1.3rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .container {
+                page-break-after: always;
+            }
+        }
+
+        .subheading {
+            margin-left: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .subheading {
+                margin-left: 1rem;
+            }
+        }
+
+        .subsection {
+            margin-left: 1.5rem;
+        }
+
+        .subsection h4 {
+            margin-left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .subsection {
+                margin-left: 1rem;
+            }
+        }
+         img {
+  display: block;
+  max-width: 55%;       /* smaller width on laptop */
+  height: auto;         /* keep proportions natural */
+  max-height: 280px;    /* limit vertical height */
+  object-fit: contain;  /* ensures full image fits */
+  margin: 1rem auto;
+  border-radius: 6px;
+}
+#lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7); /* blurred/dark background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+#lightbox.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+#lightbox img {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+
+#lightbox.active img {
+  transform: scale(1);  /* zoom in effect */
+  cursor: zoom-out;
+}
+/* Tip message styling */
+#image-tip {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 119, 204, 0.95);
+  color: #fff;
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease;
+}
+
+#image-tip.show {
+  opacity: 1;
+  visibility: visible;
+}
+ img:hover {
+  transform: scale(1.05);
+}
+
+    </style>
+
+</head>
+<body>
+
+  <header>SCT Unit-02</header>
+  <div id="image-tip">💡 Click on any image for better visualizing!</div>
+          </div>
+  <div id="lightbox">
+  <img id="lightbox-img" src="" alt="Enlarged image">
+</div>
+  <div class="container">
+    <h2>1)OWASP:</h2>
+    <ul>
+      <li>OWASP stands for Open Web Application Security Project</li>
+      <li>OWASP is a non-profit global organization that focuses on improving Web application security</li>
+
+      <li>Roles:
+        <ol class="roman">
+          <li>Awareness and Education:
+            <ul class="nested">
+              <li>OWASP educates the people on Web Application security through seminars, workshops, etc...</li>
+            </ul>
+          </li>
+
+          <li>OWASP Top 10:
+            <ul class="nested">
+              <li>OWASP publishes the OWASP Top 10</li>
+              <li>It consists of the top web application security vulnerabilities</li>
+              <li>It fixes the security vulnerabilities like Injection, Cross-Site Scripting(XSS), Broken Authentication</li>
+            </ul>
+          </li>
+
+          <li>Tools:
+            <ul class="nested">
+              <li>OWASP provides tools like:
+                <ol class="alpha">
+                  <li>OWASP ZAP - Used for testing</li>
+                  <li>Dependency-Check - Used for identifying vulnerabilities</li>
+                </ol>
+              </li>
+              <li>These tools are used to improve the web application security</li>
+            </ul>
+          </li>
+
+          <li>Frameworks:
+            <ul class="nested">
+              <li>OWASP provides frameworks like:
+                <ol class="alpha">
+                  <li>OWASP ASVS</li>
+                  <li>SAMM</li>
+                </ol>
+              </li>
+              <li>These frameworks are used to improve the web application security</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+
+  <header>SCT Unit-02</header>
+  <div class="container">
+    <h2>2)SQL Injection:</h2>
+    <ul>
+       <img src="WhatsApp Image 2025-11-11 at 23.16.08_e7e1d52f.jpg"/>
+      <li>In SQL Injection, the Attacker Injects harmful commands in SQL Queries for accessing the sensitive Information</li>
+
+      <li>Injection Risks:
+        <ol class="roman">
+          <li>Data breach:
+            <ul class="nested">
+              <li>Attackers can read, modify, or delete the data from databases</li>
+            </ul>
+          </li>
+
+          <li>Integrity breach:
+            <ul class="nested">
+              <li>Injecting Harmful commands in SQL Queries can change the records in Databases</li>
+            </ul>
+          </li>
+
+          <li>Availability impact:
+            <ul class="nested">
+              <li>Injecting Harmful commands in SQL Queries can degrade the Database</li>
+            </ul>
+          </li>
+
+          <li>Authentication breach:
+            <ul class="nested">
+              <li>Attackers can easily log in without valid credentials</li>
+            </ul>
+          </li>
+
+          <li>reputation damage:
+            <ul class="nested">
+              <li>Injecting Harmful commands in SQL Queries can damage the organization reputation</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+
+      <li>Mitigation techniques:
+        <ol class="roman">
+          <li>Use parameterized queries:
+            <ul class="nested">
+              <li>user inputs are treated as data, not executable code</li>
+              <li>It prevents the attackers from accessing the sensitive information</li>
+              <li>Example:
+                <ul class="shallow">
+                  <li>a = prepare("select * from user where name = ?");</li>
+                  <li>a.bind();</li>
+                  <li>a.execute();</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+
+          <li>Use Stored Procedure:
+            <ul class="nested">
+              <li>Execute SQL Queries by using a stored procedure with parameters</li>
+            </ul>
+          </li>
+
+          <li>WAF:
+            <ul class="nested">
+              <li>WAF stands for Web Application Firewalls</li>
+              <li>WAF is used to detect and block the injection patterns</li>
+            </ul>
+          </li>
+
+          <li>Verification:
+            <ul class="nested">
+              <li>Always verify the user input before using it</li>
+            </ul>
+          </li>
+
+          <li>Input Validation:
+            <ul class="nested">
+              <li>Always validate the user input to prevent security attacks</li>
+            </ul>
+          </li>
+
+          <li>Error Handling:
+            <ul class="nested">
+              <li>Hide the Error Messages from users</li>
+              <li>watch error messages from the server for analysis</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+
+  <header>SCT Unit-02</header>
+  <div class="container">
+    <h2>3)Cross-Site Scripting(XSS):</h2>
+    <ul>
+        <img src="WhatsApp Image 2025-11-11 at 23.19.23_205143c4.jpg"/>
+      <li>In Cross-Site Scripting(XSS), the Attacker injects harmful scripts(java Script) into the webpages for accessing the sensitive Information</li>
+
+      <li>Types of XSS attacks:
+        <ul class="nested">
+          <li>Stored XSS</li>
+          <li>Reflected XSS</li>
+          <li>DOM-based XSS</li>
+        </ul>
+      </li>
+
+      <li>Example:
+        <ul class="nested">
+          <li>&lt;input name="a"&gt;</li>
+          <li>&lt;script&gt; alert("Hacked"); &lt;/script&gt;</li>
+        </ul>
+      </li>
+
+      <li>How does it work?
+        <ol class="roman">
+          <li>finding Injection Point:
+            <ul class="nested">
+              <li>The attacker finds the place where the input is not checked</li>
+            </ul>
+          </li>
+
+          <li>Create Script:
+            <ul class="nested">
+              <li>Create a tiny script to steal the data</li>
+            </ul>
+          </li>
+
+          <li>Running Code:
+            <ul class="nested">
+              <li>This Harmful code directly runs in the victim's browsers without any restrictions</li>
+            </ul>
+          </li>
+
+          <li>Tricking users:
+            <ul class="nested">
+              <li>The data is stored in stored XSS and tricking the users into clicking the malicious link in Reflected XSS</li>
+            </ul>
+          </li>
+
+          <li>steals the data:
+            <ul class="nested">
+              <li>Finally, the attacker steals the data, sensitive information and credentials from the users</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+
+      <li>Mitigation techniques:
+        <ol class="roman">
+          <li>use CSP:
+            <ul class="nested">
+              <li>CSP stands for Content Security Policy</li>
+              <li>It restricts the inline and external script sources</li>
+            </ul>
+          </li>
+
+          <li>use HTTPOnly:
+            <ul class="nested">
+              <li>Use HTTPOnly cookies to keep the data safe from JavaScript</li>
+            </ul>
+          </li>
+
+          <li>Avoid Unsafe functions:
+            <ul class="nested">
+              <li>Avoid unsafe functions like eval(), innerHTML, etc...</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+
+  <header>SCT Unit-02</header>
+  <div class="container">
+    <h2>4)Broken Authentication:</h2>
+    <ul>
+        <img src="WhatsApp Image 2025-11-11 at 23.27.26_ebce4663.jpg"/>
+      <li>Broken Authentication happens when there is a problem in verifying the users</li>
+      <li>Broken session management happens when there is a problem in managing the sessions</li>
+
+      <li>common vulnerabilities:
+        <ol class="roman">
+          <li>weak passwords:
+            <ul class="nested">
+              <li>If the user uses weak passwords instead of strong ones makes the attackers easily access the login credentials via brute force</li>
+            </ul>
+          </li>
+
+          <li>Resetting Passwords:
+            <ul class="nested">
+              <li>Resetting Passwords is unsafe when tokens are predictable</li>
+            </ul>
+          </li>
+
+          <li>Revealing Username:
+            <ul class="nested">
+              <li>Error Messages that reveal the usernames make the attackers easily access the login credentials</li>
+            </ul>
+          </li>
+
+          <li>Session Fixation:
+            <ul class="nested">
+              <li>Attacker fixes the session ID for the users and uses it after the users log in</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+
+      <li>Mitigation Techniques:
+        <ol class="roman">
+          <li>Strong Passwords:
+            <ul class="nested">
+              <li>Use a strong Password instead of weak ones for strong authentication</li>
+            </ul>
+          </li>
+
+          <li>Protect Password Reset:
+            <ul class="nested">
+              <li>Protect Password Reset with one-time tokens</li>
+            </ul>
+          </li>
+
+          <li>prevent session fixation:
+            <ul class="nested">
+              <li>Generate a new session ID after authentication to prevent session fixation</li>
+            </ul>
+          </li>
+
+          <li>Secure Cookies:
+            <ul class="nested">
+              <li>Use Secure Cookies like HTTPS, HTTPOnly to prevent security attacks</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+
+  <header>SCT Unit-02</header>
+  <div class="container">
+    <h2>5)Broken Access Control:</h2>
+    <ul>
+        <img src="WhatsApp Image 2025-11-11 at 23.41.47_8b541466.jpg"/>
+      <li>Broken access control happens when the data is exposed and can be changed by the attackers</li>
+      <li>Broken access control is dangerous because it allows unauthorized users to access and manipulate the data due to weak access control</li>
+
+      <li>Example:
+        <ul class="nested">
+          <li>IDOR:
+            <ul class="shallow">
+              <li>IDOR stands for Insecure Direct Object Reference</li>
+              <li>Internal IDs like file names, DB Keys, URLs are exposed and can be changed by the attackers</li>
+            </ul>
+          </li>
+
+          <li>How does it work?
+            <ul class="shallow">
+              <li>The app exposes the Internal ID in the URL or form parameter</li>
+              <li>Example:
+                <ul class="shallow">
+                  <li>Invoice?id=1234</li>
+                </ul>
+              </li>
+              <li>Attacker changes the ID to access People's data</li>
+              <li>Example:
+                <ul class="shallow">
+                  <li>id=1234 to id=4321</li>
+                </ul>
+              </li>
+              <li>If servers do not recheck the authorization, it allows attackers to access the People's data</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <header>SCT Unit-02</header>
+  <div class="container">
+    <h2>6)Security Misconfiguration:</h2>
+    <ul>
+      <li>Security Misconfiguration happens when the system is not properly secured, allowing attackers to access the data</li>
+      <li>Security Misconfiguration is dangerous because it allows unauthorized users to access the data</li>
+
+      <li>Causes:
+        <ol class="roman">
+          <li>Default Credentials:
+            <ul class="nested">
+              <li>The system still uses default usernames and passwords, allowing attackers to access the data</li>
+            </ul>
+          </li>
+
+          <li>Unnecessary Features:
+            <ul class="nested">
+              <li>The system uses unnecessary features such as test files and Debugging tools, allowing attackers to access the data</li>
+            </ul>
+          </li>
+
+          <li>Weak Configuration:
+            <ul class="nested">
+              <li>Development, Testing, and Production environments are not properly configured, allowing attackers to access the data</li>
+            </ul>
+          </li>
+
+          <li>Update Required:
+            <ul class="nested">
+              <li>The system uses old programs and libraries, allowing attackers to access the data</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+
+      <li>Prevention:
+        <ul class="nested">
+          <li>Change the default credentials</li>
+          <li>Stop using the unnecessary features</li>
+          <li>Provide a strong configuration</li>
+          <li>use new programs and libraries</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <header>SCT Unit-02</header>
+  <div class="container">
+    <h2>7)Insecure Deserialization:</h2>
+    <ul>
+        <img src="WhatsApp Image 2025-11-11 at 23.59.47_f3c80dec.jpg"/>
+      <li>Insecure Deserialization happens when the app accepts untrusted data, allowing attackers to access the data</li>
+
+      <li>Risks:
+        <ol class="roman">
+          <li>RCE:
+            <ul class="nested">
+              <li>RCE stands for Remote Code Execution</li>
+              <li>An Attacker inserts the malicious serialized object into the Application.</li>
+              <li>When the Application tries to deserialized, it executes the harmful objects</li>
+            </ul>
+          </li>
+
+          <li>Denial of Service:
+            <ul class="nested">
+              <li>An Attacker inserts the malicious serialized object into the Application</li>
+              <li>When the Application tries to deserialized, it slows down the Application and denies the services</li>
+            </ul>
+          </li>
+
+          <li>Integrity Loss:
+            <ul class="nested">
+              <li>An Attacker inserts the malicious serialized object into the Application</li>
+              <li>Here, the attacker changes the values in serialized object</li>
+              <li>When the application tries to deserialized, the Application uses changed values, resulting in Integrity Loss</li>
+            </ul>
+          </li>
+
+          <li>Authentication Bypass:
+            <ul class="nested">
+              <li>An Attacker inserts the malicious serialized object into the Application</li>
+              <li>Here, the attacker changes the session or authentication data and performs unauthorized actions</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+
+  <header>SCT Unit-02</header>
+  <div class="container">
+    <h2>8)Secure Coding Practices</h2>
+    <ul>
+      <li>Security Coding Practices help developers write code to prevent security attacks</li>
+
+      <li>
+        <ol class="roman">
+          <li>Encryption:
+            <ul class="nested">
+              <li>The process of converting plaintext to ciphertext by using a cryptographic algorithm is called as Encryption</li>
+            </ul>
+          </li>
+
+          <li>Authentication:
+            <ul class="nested">
+              <li>The Process of verifying the Identity of a user or device is called as Authentication</li>
+              <li>Only Authorized users can access the data</li>
+            </ul>
+          </li>
+
+          <li>Verification:
+            <ul class="nested">
+              <li>Always verify the user input before using it</li>
+            </ul>
+          </li>
+
+          <li>Input Validation:
+            <ul class="nested">
+              <li>Always validate the user input to prevent security attacks</li>
+            </ul>
+          </li>
+
+          <li>Error Handling:
+            <ul class="nested">
+              <li>Hide the Error Messages from users</li>
+              <li>watch error messages from the server for analysis</li>
+            </ul>
+          </li>
+
+          <li>Frameworks and Libraries:
+            <ul class="nested">
+              <li>Use trusted frameworks and libraries instead of writing your own code logic for security</li>
+            </ul>
+          </li>
+
+          <li>Updates:
+            <ul class="nested">
+              <li>Update frameworks and libraries for providing security</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+
+  <header>SCT Unit-02</header>
+  <div class="container">
+    <h2>9)Cross Site Request Forgery (CSRF):</h2>
+    <ul>
+        <img src="WhatsApp Image 2025-11-11 at 23.54.29_8b6f7d8b.jpg"/>
+      <li>CSRF stands for Cross Site Request Forgery</li>
+      <li>In CSRF, it tricks the users into performing unwanted actions on a website without their knowing</li>
+
+      <li>How does it work?
+        <ul class="nested">
+          <li>User logs in to the trusted website</li>
+          <li>The attackers trick the users into clicking on harmful links</li>
+          <li>The attacker sends the fake HTTP requests to the trusted website</li>
+          <li>The trusted website accepts the HTTP requests because it thinks that the request is coming from an authorized user</li>
+        </ul>
+      </li>
+
+      <li>Risks:
+        <ol class="roman">
+          <li>Fake Transfer:
+            <ul class="nested">
+              <li>The money will be transferred from the account without the user knowing</li>
+            </ul>
+          </li>
+
+          <li>Fake Modifications:
+            <ul class="nested">
+              <li>The account details are modified without the user knowing</li>
+              <li>Example:
+                <ul class="shallow">
+                  <li>changing usernames and passwords without the user's permission</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+
+          <li>reputation damage:
+            <ul class="nested">
+              <li>Failing to validate the user's request can damage the organization reputation</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+<script>
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+
+  document.querySelectorAll("img").forEach(img => {
+    img.addEventListener("click", () => {
+      lightboxImg.src = img.src;          // set clicked image
+      lightbox.classList.add("active");   // show overlay
+    });
+  });
+
+  lightbox.addEventListener("click", () => {
+    lightbox.classList.remove("active");  // close on click anywhere
+  });
+</script>
+<script>
+  // Show message on each page load for 10 seconds
+  window.addEventListener("DOMContentLoaded", () => {
+    const tip = document.getElementById("image-tip");
+    tip.classList.add("show"); // show message
+
+    // Hide after 10 seconds
+    setTimeout(() => {
+      tip.classList.remove("show");
+    },5000);
+  });
+</script>
+</body>
+</html>
